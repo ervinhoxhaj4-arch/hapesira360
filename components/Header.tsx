@@ -7,7 +7,7 @@ export default function Header() {
     <header className="header">
       <div className="container nav">
         <Link href="/" className="brand" aria-label="Hapësira360 Ballina">
-          <Image src="/hapesira360-icon.png" alt="Hapësira360" width={38} height={38} className="brandLogo" priority />
+          <Image  src="/logo.png" alt="Hapësira360" width={38} height={38} className="brandLogo" priority />
           <span>Hapësira<span>360</span></span>
         </Link>
         <nav className="desktopNav" aria-label="Navigimi kryesor">

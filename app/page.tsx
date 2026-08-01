@@ -59,7 +59,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <footer id="kontakt" className="footer"><div className="container footerInner"><div><div className="brand footerBrand"><img src="/hapesira360-icon.png" alt="" className="footerLogo"/><span>Hapësira<span>360</span></span></div><p>Platformë moderne për prona në Kosovë.</p></div><div><strong>Kontakt</strong><a href="tel:+38344111222">+383 44 111 222</a><a href="mailto:info@hapesira360.com">info@hapesira360.com</a></div></div><div className="container footerBottom">© 2026 Hapësira360. Të gjitha të drejtat e rezervuara.</div></footer>
+      <footer id="kontakt" className="footer"><div className="container footerInner"><div><div className="brand footerBrand"><img src="/logo.png" alt="" className="footerLogo"/><span>Hapësira<span>360</span></span></div><p>Platformë moderne për prona në Kosovë.</p></div><div><strong>Kontakt</strong><a href="tel:+38344111222">+383 44 111 222</a><a href="mailto:info@hapesira360.com">info@hapesira360.com</a></div></div><div className="container footerBottom">© 2026 Hapësira360. Të gjitha të drejtat e rezervuara.</div></footer>
     </>
   );
 }
