@@ -1,0 +1,21 @@
+export type Property = {
+  id: string;
+  title: string;
+  purpose: 'shitje' | 'qira';
+  type: 'Apartament' | 'Shtëpi' | 'Vilë' | 'Lokal' | 'Truall';
+  city: string;
+  neighborhood: string;
+  price: number;
+  area: number;
+  bedrooms: number;
+  bathrooms: number;
+  floor?: number;
+  description: string;
+  coverImage: string;
+  images: string[];
+  tour360Url?: string;
+  latitude: number;
+  longitude: number;
+  featured?: boolean;
+  published: boolean;
+};
