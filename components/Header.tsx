@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
 
@@ -6,7 +7,7 @@ export default function Header() {
     <header className="header">
       <div className="container nav">
         <Link href="/" className="brand" aria-label="Hapësira360 Ballina">
-          <span className="brandMark">H</span>
+          <Image src="/hapesira360-icon.png" alt="Hapësira360" width={38} height={38} className="brandLogo" priority />
           <span>Hapësira<span>360</span></span>
         </Link>
         <nav className="desktopNav" aria-label="Navigimi kryesor">
@@ -15,7 +16,7 @@ export default function Header() {
           <Link href="/kerko?purpose=qira">Me Qira</Link>
           <Link href="#kontakt">Kontakti</Link>
         </nav>
-        <button className="menuButton" aria-label="Hap menynë"><Menu size={21} /></button>
+        <button className="menuButton" aria-label="Hap menynë"><Menu size={22} /></button>
       </div>
     </header>
   );
