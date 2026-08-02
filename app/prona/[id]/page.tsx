@@ -89,7 +89,7 @@ export default async function PropertyPage({
     Formati: kodi i shtetit + numri, pa + dhe pa hapësira.
     Shembull Kosovë: 38344111222
   */
-  const whatsappNumber = '38344111222';
+  const whatsappNumber = '38343589529';
 
   const whatsappLink =
     `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
