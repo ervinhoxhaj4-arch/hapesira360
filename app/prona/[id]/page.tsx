@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import FavoriteButton from '@/components/FavoriteButton';
 import ViewingRequest from '@/components/ViewingRequest';
 import Header from '@/components/Header';
@@ -30,6 +31,59 @@ type PropertyPageProps = {
     id: string;
   }>;
 };
+export async function generateMetadata({
+  params,
+}: PropertyPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  const property = await getPublishedProperty(id);
+
+  if (!property) {
+    return {
+      title: 'Prona nuk u gjet | Hapësira360',
+      description: 'Kjo pronë nuk është më e disponueshme.',
+    };
+  }
+
+  const price =
+    property.purpose === 'qira'
+      ? `€${Number(property.price).toLocaleString('de-DE')} / muaj`
+      : `€${Number(property.price).toLocaleString('de-DE')}`;
+
+  const description =
+    property.description?.slice(0, 155) ||
+    `${property.title} në ${property.city}. Çmimi: ${price}. Shiko fotografitë, lokacionin dhe detajet në Hapësira360.`;
+
+  return {
+    title: `${property.title} | Hapësira360`,
+    description,
+    alternates: {
+      canonical: `https://hapesira360.com/prona/${property.id}`,
+    },
+    openGraph: {
+      title: property.title,
+      description,
+      url: `https://hapesira360.com/prona/${property.id}`,
+      siteName: 'Hapësira360',
+      locale: 'sq_AL',
+      type: 'website',
+      images: [
+        {
+          url: property.coverImage,
+          width: 1200,
+          height: 630,
+          alt: property.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: property.title,
+      description,
+      images: [property.coverImage],
+    },
+  };
+}
 
 export default async function PropertyPage({
   params,
