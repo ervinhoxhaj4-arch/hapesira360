@@ -55,27 +55,28 @@ export const properties: UiProperty[] = [
     published: true,
   },
   {
-    id: 'shtepi-familjare-ferizaj',
-    title: 'Shtëpi familjare me oborr',
-    purpose: 'shitje',
-    type: 'Shtëpi',
-    city: 'Ferizaj',
-    neighborhood: 'Qendër',
-    price: 235000,
-    area: 210,
-    bedrooms: 4,
-    bathrooms: 2,
-    description:
-      'Shtëpi e bollshme familjare me oborr privat dhe organizim praktik në dy kate.',
-    coverImage:
-      'https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1600&q=85',
-    images: [
-      'https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1600&q=85',
-    ],
-    latitude: 42.3702,
-    longitude: 21.1553,
-    published: true,
-  },
+  id: 'shtepi-familjare-ferizaj',
+  title: 'Shtëpi familjare me oborr',
+  purpose: 'shitje',
+  type: 'Shtëpi',
+  city: 'Ferizaj',
+  neighborhood: 'Qendër',
+  price: 235000,
+  area: 210,
+  bedrooms: 4,
+  bathrooms: 2,
+  description:
+    'Shtëpi e bollshme familjare me oborr privat dhe organizim praktik në dy kate.',
+  coverImage:
+    'https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1600&q=85',
+  images: [
+    'https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1600&q=85',
+  ],
+  latitude: 42.3702,
+  longitude: 21.1553,
+  featured: false,
+  published: true,
+},
 ];
 
 export const getProperty = (id: string) =>
