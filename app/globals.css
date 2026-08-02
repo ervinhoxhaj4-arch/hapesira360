@@ -636,3 +636,58 @@
   margin: 0 0 18px;
   color: var(--muted);
 }
+/* =========================
+   FAVORITE BUTTON
+========================= */
+
+.propertyTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.propertyTitleRow h1 {
+  margin-right: auto;
+}
+
+.favoriteButton {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(11, 21, 38, 0.55);
+  color: #ffffff;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.favoriteButton.active {
+  border-color: #e63946;
+  background: #e63946;
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .propertyTitleRow {
+    align-items: flex-start;
+  }
+
+  .favoriteButton {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+}
