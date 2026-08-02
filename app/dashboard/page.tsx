@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Building2,
+  CalendarDays,
   ExternalLink,
   LogOut,
   Pencil,
@@ -153,16 +154,21 @@ export default function DashboardPage() {
         </Link>
 
         <nav className="adminNav" aria-label="Navigimi administrativ">
-          <Link className="active" href="/dashboard">
-            <Building2 size={20} />
-            Pronat
-          </Link>
+  <Link className="active" href="/dashboard">
+    <Building2 size={20} />
+    Pronat
+  </Link>
 
-          <Link href="/shto-prone">
-            <Plus size={20} />
-            Shto pronë
-          </Link>
-        </nav>
+  <Link href="/shto-prone">
+    <Plus size={20} />
+    Shto pronë
+  </Link>
+
+  <Link href="/dashboard/kerkesat">
+    <CalendarDays size={20} />
+    Kërkesat
+  </Link>
+</nav>
 
         <button
           type="button"
