@@ -9,13 +9,16 @@ export default function Header() {
         <Link href="/" className="brand" aria-label="Hapësira360 Ballina">
           <Image
             src="/logo-icon.png"
-            alt="Hapësira360"
-            width={38}
-            height={38}
+            alt=""
+            width={44}
+            height={44}
             className="brandLogo"
             priority
           />
-          <span>Hapësira<span>360</span></span>
+
+          <span className="brandText">
+            Hapësira<span>360</span>
+          </span>
         </Link>
 
         <nav className="desktopNav" aria-label="Navigimi kryesor">
