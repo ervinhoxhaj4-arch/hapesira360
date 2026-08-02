@@ -34,8 +34,10 @@ export default async function SearchPage({
     );
   }
 
-  if (params.city) {
-  const selectedCity = params.city.trim().toLocaleLowerCase('sq');
+ if (params.city) {
+  const selectedCity = params.city
+    .trim()
+    .toLocaleLowerCase('sq');
 
   properties = properties.filter((property) => {
     const propertyCity = property.city
@@ -44,7 +46,6 @@ export default async function SearchPage({
 
     return propertyCity === selectedCity;
   });
-}
   }
 
   if (params.type) {
@@ -119,9 +120,11 @@ export default async function SearchPage({
   }
 
   const hasActiveFilters = Object.entries(params).some(
-    ([key, value]) =>
-      key !== 'sort' && typeof value === 'string' && value.length > 0
-  );
+  ([key, value]) =>
+    key !== 'sort' &&
+    typeof value === 'string' &&
+    value.length > 0
+);
 
   return (
     <>
