@@ -8,6 +8,7 @@ import {
   Building2,
   ExternalLink,
   LogOut,
+  Pencil,
   Plus,
   Trash2,
 } from 'lucide-react';
@@ -245,23 +246,31 @@ export default function DashboardPage() {
               </span>
 
               <div className="rowActions">
-                <Link
-                  href={`/prona/${property.id}`}
-                  title="Shiko pronën"
-                  aria-label="Shiko pronën"
-                >
-                  <ExternalLink size={18} />
-                </Link>
+  <Link
+    href={`/dashboard/prona/${property.id}/edit`}
+    title="Ndrysho pronën"
+    aria-label="Ndrysho pronën"
+  >
+    <Pencil size={18} />
+  </Link>
 
-                <button
-                  type="button"
-                  onClick={() => removeProperty(property.id)}
-                  title="Fshi pronën"
-                  aria-label="Fshi pronën"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
+  <Link
+    href={`/prona/${property.id}`}
+    title="Shiko pronën"
+    aria-label="Shiko pronën"
+  >
+    <ExternalLink size={18} />
+  </Link>
+
+  <button
+    type="button"
+    onClick={() => removeProperty(property.id)}
+    title="Fshi pronën"
+    aria-label="Fshi pronën"
+  >
+    <Trash2 size={18} />
+  </button>
+</div>
             </div>
           ))}
         </div>
