@@ -371,3 +371,87 @@
 .copyShare {
   background: var(--navy);
 }
+/* =========================
+   VIEWING REQUEST
+========================= */
+
+.viewingRequest {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.viewingRequestHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-bottom: 18px;
+}
+
+.viewingRequestHead > svg {
+  color: var(--gold);
+}
+
+.viewingRequestHead h3 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.viewingRequest form {
+  display: grid;
+  gap: 13px;
+}
+
+.viewingRequest label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.viewingRequest input,
+.viewingRequest textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  resize: vertical;
+}
+
+.viewingRequest input:focus,
+.viewingRequest textarea:focus {
+  border-color: var(--gold);
+}
+
+.viewingRequest button {
+  width: 100%;
+  padding: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.viewingRequest button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.inquirySuccess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 700;
+}

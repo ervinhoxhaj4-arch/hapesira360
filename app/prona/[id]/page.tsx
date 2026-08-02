@@ -1,3 +1,4 @@
+import ViewingRequest from '@/components/ViewingRequest';
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
 import PropertyGallery from '@/components/PropertyGallery';
@@ -297,6 +298,10 @@ export default async function PropertyPage({
               <MessageCircle />
               Kontakto në WhatsApp
             </a>
+            <ViewingRequest
+  propertyId={property.id}
+  propertyTitle={property.title}
+/>
 
             <Link
               href="/#kontakt"
