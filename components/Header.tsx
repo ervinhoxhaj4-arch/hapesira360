@@ -11,6 +11,7 @@ export default function Header() {
           <span className="brandText">Hapësira<span>360</span></span>
         </Link>
         <nav className="desktopNav" aria-label="Navigimi kryesor">
+          <Link href="/te-preferuarat">Të preferuarat</Link>
           <Link href="/">Ballina</Link>
           <Link href="/kerko?purpose=shitje">Shitje</Link>
           <Link href="/kerko?purpose=qira">Me Qira</Link>

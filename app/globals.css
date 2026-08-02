@@ -597,3 +597,42 @@
     display: grid;
   }
 }
+/* =========================
+   FAVORITES PAGE
+========================= */
+
+.favoritesLead {
+  margin-top: -22px;
+  margin-bottom: 34px;
+}
+
+.favoritesLoading {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.favoritesEmpty {
+  padding: 75px 24px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--soft);
+}
+
+.favoritesEmpty svg {
+  color: #e63946;
+}
+
+.favoritesEmpty h2 {
+  margin: 8px 0 0;
+}
+
+.favoritesEmpty p {
+  margin: 0 0 18px;
+  color: var(--muted);
+}
