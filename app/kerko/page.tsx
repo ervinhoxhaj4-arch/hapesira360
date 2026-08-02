@@ -35,10 +35,16 @@ export default async function SearchPage({
   }
 
   if (params.city) {
-    properties = properties.filter(
-      (property) =>
-        property.city.toLowerCase() === params.city?.toLowerCase()
-    );
+  const selectedCity = params.city.trim().toLocaleLowerCase('sq');
+
+  properties = properties.filter((property) => {
+    const propertyCity = property.city
+      .trim()
+      .toLocaleLowerCase('sq');
+
+    return propertyCity === selectedCity;
+  });
+}
   }
 
   if (params.type) {
