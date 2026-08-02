@@ -3,50 +3,81 @@
 import { Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+type FavoriteButtonProps = {
+  propertyId: string;
+};
+
 export default function FavoriteButton({
   propertyId,
-}: {
-  propertyId: string;
-}) {
+}: FavoriteButtonProps) {
   const [saved, setSaved] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const favorites = JSON.parse(
-      localStorage.getItem('favorites') || '[]'
-    );
+    try {
+      const stored = localStorage.getItem('favorites');
+      const favorites: string[] = stored
+        ? JSON.parse(stored)
+        : [];
 
-    setSaved(favorites.includes(propertyId));
+      setSaved(favorites.includes(propertyId));
+    } catch {
+      setSaved(false);
+    } finally {
+      setReady(true);
+    }
   }, [propertyId]);
 
   function toggleFavorite() {
-    const favorites = JSON.parse(
-      localStorage.getItem('favorites') || '[]'
-    );
+    try {
+      const stored = localStorage.getItem('favorites');
+      const favorites: string[] = stored
+        ? JSON.parse(stored)
+        : [];
 
-    let updated;
+      const updatedFavorites = favorites.includes(propertyId)
+        ? favorites.filter((id) => id !== propertyId)
+        : [...favorites, propertyId];
 
-    if (favorites.includes(propertyId)) {
-      updated = favorites.filter((id: string) => id !== propertyId);
+      localStorage.setItem(
+        'favorites',
+        JSON.stringify(updatedFavorites)
+      );
+
+      setSaved(updatedFavorites.includes(propertyId));
+    } catch {
       setSaved(false);
-    } else {
-      updated = [...favorites, propertyId];
-      setSaved(true);
     }
+  }
 
-    localStorage.setItem(
-      'favorites',
-      JSON.stringify(updated)
+  if (!ready) {
+    return (
+      <span
+        className="favoriteButton favoriteButtonLoading"
+        aria-hidden="true"
+      />
     );
   }
 
   return (
     <button
       type="button"
-      onClick={toggleFavorite}
       className={`favoriteButton ${saved ? 'active' : ''}`}
+      onClick={toggleFavorite}
+      aria-label={
+        saved
+          ? 'Hiqe nga të preferuarat'
+          : 'Ruaje te të preferuarat'
+      }
+      title={
+        saved
+          ? 'Hiqe nga të preferuarat'
+          : 'Ruaje te të preferuarat'
+      }
     >
       <Heart
-        size={19}
+        size={23}
+        strokeWidth={2.2}
         fill={saved ? 'currentColor' : 'none'}
       />
     </button>
