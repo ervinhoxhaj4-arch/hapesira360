@@ -1,0 +1,8 @@
+Hapësira360 homepage update
+
+1. Upload/replace these project files in the GitHub repository.
+2. Keep the Vercel environment variables already configured.
+3. Commit the changes. Vercel will deploy automatically.
+4. The hidden admin route remains /h360-admin.
+
+This update changes the public homepage, header, search presentation, branding icon and mobile styling. It does not change your Supabase tables.
