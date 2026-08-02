@@ -1,3 +1,4 @@
+import FavoriteButton from '@/components/FavoriteButton';
 import ViewingRequest from '@/components/ViewingRequest';
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
@@ -124,7 +125,11 @@ export default async function PropertyPage({
                 : ''}
             </p>
 
-            <h1>{property.title}</h1>
+            <div className="propertyTitleRow">
+  <h1>{property.title}</h1>
+
+  <FavoriteButton propertyId={property.id} />
+</div>
 
             <div className="propertyHeroBottom">
               <strong>{price}</strong>

@@ -455,3 +455,33 @@
   font-size: 13px;
   font-weight: 700;
 }
+/* FAVORITES */
+
+.propertyTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.favoriteButton {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.08);
+}
+
+.favoriteButton.active {
+  background: #e63946;
+}
