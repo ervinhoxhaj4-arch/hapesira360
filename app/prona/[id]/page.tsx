@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
+import PropertyGallery from '@/components/PropertyGallery';
 import {
   getPublishedProperties,
   getPublishedProperty,
@@ -210,34 +211,10 @@ export default async function PropertyPage({
                 </span>
               </div>
 
-              <div className="gallery">
-                {images.map((image, index) => (
-                  <a
-                    key={`${image}-${index}`}
-                    href={image}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={
-                      index === 0 ? 'galleryLarge' : ''
-                    }
-                    aria-label={`Hap fotografinë ${index + 1}`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${property.title} – fotografia ${
-                        index + 1
-                      }`}
-                      fill
-                      sizes={
-                        index === 0
-                          ? '(max-width: 850px) 100vw, 60vw'
-                          : '(max-width: 850px) 100vw, 30vw'
-                      }
-                      className="galleryImage"
-                    />
-                  </a>
-                ))}
-              </div>
+<PropertyGallery
+  images={images}
+  title={property.title}
+/>
             </section>
 
             <section className="description">
