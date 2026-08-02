@@ -162,3 +162,112 @@
     height: 300px;
   }
 }
+/* =========================
+   EMBEDDED 360 TOUR
+========================= */
+
+.embeddedTourSection {
+  display: grid;
+  gap: 22px;
+}
+
+.embeddedTourHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.embeddedTourHeading h2 {
+  margin: 7px 0 8px;
+}
+
+.embeddedTourHeading > div > p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.openTourButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--navy);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.embeddedTour {
+  position: relative;
+  width: 100%;
+  height: 560px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--navy);
+  box-shadow: 0 18px 45px rgba(11, 21, 38, 0.15);
+}
+
+.embeddedTour iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.tourLoading {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 13px;
+  color: #ffffff;
+}
+
+.tourLoading svg {
+  color: var(--gold);
+}
+
+.tourFullscreenHint {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(11, 21, 38, 0.78);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 850px) {
+  .embeddedTourHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .embeddedTour {
+    height: 480px;
+    border-radius: 18px;
+  }
+
+  .openTourButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .embeddedTour {
+    height: 420px;
+  }
+}
