@@ -1,3 +1,4 @@
+import PropertyViewTracker from '@/components/PropertyViewTracker';
 import type { Metadata } from 'next';
 import FavoriteButton from '@/components/FavoriteButton';
 import ViewingRequest from '@/components/ViewingRequest';
@@ -154,6 +155,8 @@ export default async function PropertyPage({
   return (
     <>
       <Header />
+      
+       <PropertyViewTracker propertyId={property.id} />
 
       <main>
         <section className="propertyHero">
