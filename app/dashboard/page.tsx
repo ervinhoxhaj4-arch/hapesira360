@@ -4,12 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import {
   Building2,
   CalendarDays,
   ExternalLink,
   Eye,
   LogOut,
+  MessageCircle,
   Pencil,
   Plus,
   Trash2,
@@ -23,11 +25,21 @@ type PropertyView = {
   property_id: string;
 };
 
+type WhatsAppClick = {
+  property_id: string;
+};
+
 export default function DashboardPage() {
   const router = useRouter();
 
   const [properties, setProperties] = useState<DbProperty[]>([]);
-  const [viewCounts, setViewCounts] = useState<Record<string, number>>({});
+  const [viewCounts, setViewCounts] = useState<
+    Record<string, number>
+  >({});
+
+  const [whatsappClickCounts, setWhatsappClickCounts] =
+    useState<Record<string, number>>({});
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -48,26 +60,57 @@ export default function DashboardPage() {
           return;
         }
 
-        const [adminProperties, viewsResult] = await Promise.all([
+        const [
+          adminProperties,
+          viewsResult,
+          whatsappResult,
+        ] = await Promise.all([
           getAdminProperties(),
-          supabase.from('property_views').select('property_id'),
+
+          supabase
+            .from('property_views')
+            .select('property_id'),
+
+          supabase
+            .from('property_whatsapp_clicks')
+            .select('property_id'),
         ]);
 
         if (viewsResult.error) {
           throw viewsResult.error;
         }
 
+        if (whatsappResult.error) {
+          throw whatsappResult.error;
+        }
+
         const counts = (
           (viewsResult.data || []) as PropertyView[]
-        ).reduce<Record<string, number>>((result, view) => {
-          result[view.property_id] =
-            (result[view.property_id] || 0) + 1;
+        ).reduce<Record<string, number>>(
+          (result, view) => {
+            result[view.property_id] =
+              (result[view.property_id] || 0) + 1;
 
-          return result;
-        }, {});
+            return result;
+          },
+          {}
+        );
+
+        const whatsappCounts = (
+          (whatsappResult.data || []) as WhatsAppClick[]
+        ).reduce<Record<string, number>>(
+          (result, click) => {
+            result[click.property_id] =
+              (result[click.property_id] || 0) + 1;
+
+            return result;
+          },
+          {}
+        );
 
         setProperties(adminProperties);
         setViewCounts(counts);
+        setWhatsappClickCounts(whatsappCounts);
       } catch (err) {
         setError(
           err instanceof Error
@@ -97,7 +140,9 @@ export default function DashboardPage() {
 
     setError('');
 
-    const property = properties.find((item) => item.id === id);
+    const property = properties.find(
+      (item) => item.id === id
+    );
 
     const imagePaths =
       property?.property_images
@@ -108,24 +153,28 @@ export default function DashboardPage() {
             return '';
           }
 
-          return image.image_url.split(marker)[1] ?? '';
+          return (
+            image.image_url.split(marker)[1] ?? ''
+          );
         })
         .filter(Boolean) ?? [];
 
     if (imagePaths.length > 0) {
-      const { error: imageDeleteError } = await supabase.storage
-        .from('property-images')
-        .remove(imagePaths);
+      const { error: imageDeleteError } =
+        await supabase.storage
+          .from('property-images')
+          .remove(imagePaths);
 
       if (imageDeleteError) {
         console.warn(imageDeleteError.message);
       }
     }
 
-    const { error: deleteError } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', id);
+    const { error: deleteError } =
+      await supabase
+        .from('properties')
+        .delete()
+        .eq('id', id);
 
     if (deleteError) {
       setError(deleteError.message);
@@ -133,10 +182,18 @@ export default function DashboardPage() {
     }
 
     setProperties((current) =>
-      current.filter((item) => item.id !== id)
+      current.filter(
+        (item) => item.id !== id
+      )
     );
 
     setViewCounts((current) => {
+      const updated = { ...current };
+      delete updated[id];
+      return updated;
+    });
+
+    setWhatsappClickCounts((current) => {
       const updated = { ...current };
       delete updated[id];
       return updated;
@@ -146,20 +203,35 @@ export default function DashboardPage() {
   const totalProperties = properties.length;
 
   const saleProperties = properties.filter(
-    (property) => property.status === 'sale'
+    (property) =>
+      property.status === 'sale'
   ).length;
 
   const rentProperties = properties.filter(
-    (property) => property.status === 'rent'
+    (property) =>
+      property.status === 'rent'
   ).length;
 
   const totalViews = useMemo(
     () =>
       Object.values(viewCounts).reduce(
-        (total, count) => total + count,
+        (total, count) =>
+          total + count,
         0
       ),
     [viewCounts]
+  );
+
+  const totalWhatsappClicks = useMemo(
+    () =>
+      Object.values(
+        whatsappClickCounts
+      ).reduce(
+        (total, count) =>
+          total + count,
+        0
+      ),
+    [whatsappClickCounts]
   );
 
   if (loading) {
@@ -176,7 +248,6 @@ export default function DashboardPage() {
         <Link
           href="/dashboard"
           className="adminBrand"
-          aria-label="Hapësira360 Dashboard"
         >
           <Image
             src="/logo-icon.png"
@@ -196,7 +267,10 @@ export default function DashboardPage() {
           className="adminNav"
           aria-label="Navigimi administrativ"
         >
-          <Link className="active" href="/dashboard">
+          <Link
+            className="active"
+            href="/dashboard"
+          >
             <Building2 size={20} />
             Pronat
           </Link>
@@ -225,11 +299,19 @@ export default function DashboardPage() {
       <section className="dashboardContent">
         <div className="dashboardHead">
           <div>
-            <p className="eyebrow">Paneli administrativ</p>
-            <h1>Menaxho pronat</h1>
+            <p className="eyebrow">
+              Paneli administrativ
+            </p>
+
+            <h1>
+              Menaxho pronat
+            </h1>
           </div>
 
-          <Link className="darkButton" href="/shto-prone">
+          <Link
+            className="darkButton"
+            href="/shto-prone"
+          >
             <Plus size={20} />
             Shto pronë
           </Link>
@@ -238,22 +320,37 @@ export default function DashboardPage() {
         <div className="stats">
           <article>
             <span>Gjithsej</span>
-            <strong>{totalProperties}</strong>
+            <strong>
+              {totalProperties}
+            </strong>
           </article>
 
           <article>
             <span>Në shitje</span>
-            <strong>{saleProperties}</strong>
+            <strong>
+              {saleProperties}
+            </strong>
           </article>
 
           <article>
             <span>Me qira</span>
-            <strong>{rentProperties}</strong>
+            <strong>
+              {rentProperties}
+            </strong>
           </article>
 
           <article>
             <span>Shikime</span>
-            <strong>{totalViews}</strong>
+            <strong>
+              {totalViews}
+            </strong>
+          </article>
+
+          <article>
+            <span>WhatsApp</span>
+            <strong>
+              {totalWhatsappClicks}
+            </strong>
           </article>
         </div>
 
@@ -266,40 +363,52 @@ export default function DashboardPage() {
         <div className="adminTable">
           <div className="tableHead">
             <h2>Pronat</h2>
-            <span>Të dhëna reale</span>
+            <span>
+              Të dhëna reale
+            </span>
           </div>
-
-          {properties.length === 0 && (
-            <div className="emptyState">
-              Ende nuk ke publikuar prona. Kliko “Shto pronë”.
-            </div>
-          )}
 
           {properties.map((property) => {
             const propertyViews =
               viewCounts[property.id] || 0;
 
+            const propertyWhatsapp =
+              whatsappClickCounts[property.id] ||
+              0;
+
             return (
-              <div className="tableRow" key={property.id}>
+              <div
+                className="tableRow"
+                key={property.id}
+              >
                 <div className="propertySummary">
-                  <b>{property.title}</b>
+                  <b>
+                    {property.title}
+                  </b>
 
                   <span>
-                    {property.city} · {property.area ?? 0} m²
+                    {property.city} ·{' '}
+                    {property.area ?? 0} m²
                   </span>
 
                   <span className="propertyViewCount">
                     <Eye size={15} />
                     {propertyViews}{' '}
-                    {propertyViews === 1
-                      ? 'shikim'
-                      : 'shikime'}
+                    shikime
+                  </span>
+
+                  <span className="propertyViewCount">
+                    <MessageCircle size={15} />
+                    {propertyWhatsapp}{' '}
+                    WhatsApp
                   </span>
                 </div>
 
                 <strong>
                   €
-                  {Number(property.price).toLocaleString(
+                  {Number(
+                    property.price
+                  ).toLocaleString(
                     'de-DE'
                   )}
                 </strong>
@@ -319,16 +428,12 @@ export default function DashboardPage() {
                 <div className="rowActions">
                   <Link
                     href={`/dashboard/prona/${property.id}/edit`}
-                    title="Ndrysho pronën"
-                    aria-label="Ndrysho pronën"
                   >
                     <Pencil size={18} />
                   </Link>
 
                   <Link
                     href={`/prona/${property.id}`}
-                    title="Shiko pronën"
-                    aria-label="Shiko pronën"
                   >
                     <ExternalLink size={18} />
                   </Link>
@@ -336,10 +441,10 @@ export default function DashboardPage() {
                   <button
                     type="button"
                     onClick={() =>
-                      removeProperty(property.id)
+                      removeProperty(
+                        property.id
+                      )
                     }
-                    title="Fshi pronën"
-                    aria-label="Fshi pronën"
                   >
                     <Trash2 size={18} />
                   </button>
