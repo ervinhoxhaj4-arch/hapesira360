@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
 import { getPublishedProperties } from '@/lib/properties';
@@ -9,6 +10,27 @@ import {
 import Link from 'next/link';
 
 export const revalidate = 0;
+export const metadata: Metadata = {
+  title: 'Search Properties in Kosovo | Hapësira360',
+  description:
+    'Search properties for sale and rent in Kosovo by city, price, property type, bedrooms, bathrooms and area.',
+  alternates: {
+    canonical: 'https://hapesira360.com/en/kerko',
+    languages: {
+      sq: 'https://hapesira360.com/kerko',
+      en: 'https://hapesira360.com/en/kerko',
+    },
+  },
+  openGraph: {
+    title: 'Search Properties in Kosovo | Hapësira360',
+    description:
+      'Search properties for sale and rent in Kosovo by city, price and property features.',
+    url: 'https://hapesira360.com/en/kerko',
+    siteName: 'Hapësira360',
+    locale: 'en_US',
+    type: 'website',
+  },
+};
 
 type SearchParams = {
   purpose?: string;
