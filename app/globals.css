@@ -1001,3 +1001,16 @@
     grid-template-columns: 1fr auto;
   }
 }
+.propertyViewCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.propertyViewCount svg {
+  color: var(--gold);
+}

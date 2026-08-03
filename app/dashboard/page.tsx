@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Building2,
   CalendarDays,
   ExternalLink,
+  Eye,
   LogOut,
   Pencil,
   Plus,
@@ -18,15 +19,20 @@ import { getAdminProperties } from '@/lib/properties';
 import { supabase } from '@/lib/supabase';
 import type { DbProperty } from '@/lib/types';
 
+type PropertyView = {
+  property_id: string;
+};
+
 export default function DashboardPage() {
   const router = useRouter();
 
   const [properties, setProperties] = useState<DbProperty[]>([]);
+  const [viewCounts, setViewCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    async function loadProperties() {
+    async function loadDashboard() {
       try {
         setError('');
 
@@ -42,20 +48,38 @@ export default function DashboardPage() {
           return;
         }
 
-        const adminProperties = await getAdminProperties();
+        const [adminProperties, viewsResult] = await Promise.all([
+          getAdminProperties(),
+          supabase.from('property_views').select('property_id'),
+        ]);
+
+        if (viewsResult.error) {
+          throw viewsResult.error;
+        }
+
+        const counts = (
+          (viewsResult.data || []) as PropertyView[]
+        ).reduce<Record<string, number>>((result, view) => {
+          result[view.property_id] =
+            (result[view.property_id] || 0) + 1;
+
+          return result;
+        }, {});
+
         setProperties(adminProperties);
+        setViewCounts(counts);
       } catch (err) {
         setError(
           err instanceof Error
             ? err.message
-            : 'Nuk u ngarkuan pronat.'
+            : 'Paneli nuk u ngarkua.'
         );
       } finally {
         setLoading(false);
       }
     }
 
-    void loadProperties();
+    void loadDashboard();
   }, [router]);
 
   async function logout() {
@@ -111,14 +135,12 @@ export default function DashboardPage() {
     setProperties((current) =>
       current.filter((item) => item.id !== id)
     );
-  }
 
-  if (loading) {
-    return (
-      <main className="loadingScreen">
-        Duke ngarkuar panelin...
-      </main>
-    );
+    setViewCounts((current) => {
+      const updated = { ...current };
+      delete updated[id];
+      return updated;
+    });
   }
 
   const totalProperties = properties.length;
@@ -130,6 +152,23 @@ export default function DashboardPage() {
   const rentProperties = properties.filter(
     (property) => property.status === 'rent'
   ).length;
+
+  const totalViews = useMemo(
+    () =>
+      Object.values(viewCounts).reduce(
+        (total, count) => total + count,
+        0
+      ),
+    [viewCounts]
+  );
+
+  if (loading) {
+    return (
+      <main className="loadingScreen">
+        Duke ngarkuar panelin...
+      </main>
+    );
+  }
 
   return (
     <main className="dashboard">
@@ -153,22 +192,25 @@ export default function DashboardPage() {
           </span>
         </Link>
 
-        <nav className="adminNav" aria-label="Navigimi administrativ">
-  <Link className="active" href="/dashboard">
-    <Building2 size={20} />
-    Pronat
-  </Link>
+        <nav
+          className="adminNav"
+          aria-label="Navigimi administrativ"
+        >
+          <Link className="active" href="/dashboard">
+            <Building2 size={20} />
+            Pronat
+          </Link>
 
-  <Link href="/shto-prone">
-    <Plus size={20} />
-    Shto pronë
-  </Link>
+          <Link href="/shto-prone">
+            <Plus size={20} />
+            Shto pronë
+          </Link>
 
-  <Link href="/dashboard/kerkesat">
-    <CalendarDays size={20} />
-    Kërkesat
-  </Link>
-</nav>
+          <Link href="/dashboard/kerkesat">
+            <CalendarDays size={20} />
+            Kërkesat
+          </Link>
+        </nav>
 
         <button
           type="button"
@@ -208,6 +250,11 @@ export default function DashboardPage() {
             <span>Me qira</span>
             <strong>{rentProperties}</strong>
           </article>
+
+          <article>
+            <span>Shikime</span>
+            <strong>{totalViews}</strong>
+          </article>
         </div>
 
         {error && (
@@ -228,57 +275,78 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {properties.map((property) => (
-            <div className="tableRow" key={property.id}>
-              <div className="propertySummary">
-                <b>{property.title}</b>
-                <span>
-                  {property.city} · {property.area ?? 0} m²
+          {properties.map((property) => {
+            const propertyViews =
+              viewCounts[property.id] || 0;
+
+            return (
+              <div className="tableRow" key={property.id}>
+                <div className="propertySummary">
+                  <b>{property.title}</b>
+
+                  <span>
+                    {property.city} · {property.area ?? 0} m²
+                  </span>
+
+                  <span className="propertyViewCount">
+                    <Eye size={15} />
+                    {propertyViews}{' '}
+                    {propertyViews === 1
+                      ? 'shikim'
+                      : 'shikime'}
+                  </span>
+                </div>
+
+                <strong>
+                  €
+                  {Number(property.price).toLocaleString(
+                    'de-DE'
+                  )}
+                </strong>
+
+                <span
+                  className={
+                    property.published
+                      ? 'status published'
+                      : 'status draft'
+                  }
+                >
+                  {property.published
+                    ? 'Publikuar'
+                    : 'Draft'}
                 </span>
+
+                <div className="rowActions">
+                  <Link
+                    href={`/dashboard/prona/${property.id}/edit`}
+                    title="Ndrysho pronën"
+                    aria-label="Ndrysho pronën"
+                  >
+                    <Pencil size={18} />
+                  </Link>
+
+                  <Link
+                    href={`/prona/${property.id}`}
+                    title="Shiko pronën"
+                    aria-label="Shiko pronën"
+                  >
+                    <ExternalLink size={18} />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      removeProperty(property.id)
+                    }
+                    title="Fshi pronën"
+                    aria-label="Fshi pronën"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
-
-              <strong>
-                €{Number(property.price).toLocaleString('de-DE')}
-              </strong>
-
-              <span
-                className={
-                  property.published
-                    ? 'status published'
-                    : 'status draft'
-                }
-              >
-                {property.published ? 'Publikuar' : 'Draft'}
-              </span>
-
-              <div className="rowActions">
-  <Link
-    href={`/dashboard/prona/${property.id}/edit`}
-    title="Ndrysho pronën"
-    aria-label="Ndrysho pronën"
-  >
-    <Pencil size={18} />
-  </Link>
-
-  <Link
-    href={`/prona/${property.id}`}
-    title="Shiko pronën"
-    aria-label="Shiko pronën"
-  >
-    <ExternalLink size={18} />
-  </Link>
-
-  <button
-    type="button"
-    onClick={() => removeProperty(property.id)}
-    title="Fshi pronën"
-    aria-label="Fshi pronën"
-  >
-    <Trash2 size={18} />
-  </button>
-</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </main>
