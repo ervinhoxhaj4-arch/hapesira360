@@ -1,12 +1,25 @@
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import 'leaflet/dist/leaflet.css';
 import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Hapësira360 — Prona në Kosovë',
-  description: 'Prona në shitje dhe me qira, me fotografi cilësore dhe vizita virtuale 360°.',
+  description:
+    'Prona në shitje dhe me qira, me fotografi cilësore dhe vizita virtuale 360°.',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="sq"><body>{children}</body></html>;
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="sq">
+      <body>
+        <GoogleAnalytics />
+        {children}
+      </body>
+    </html>
+  );
 }
