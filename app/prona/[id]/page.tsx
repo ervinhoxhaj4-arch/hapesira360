@@ -5,6 +5,7 @@ import ViewingRequest from '@/components/ViewingRequest';
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
 import PropertyGallery from '@/components/PropertyGallery';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import {
   getPublishedProperties,
   getPublishedProperty,
@@ -21,7 +22,6 @@ import {
   ExternalLink,
   MapPin,
   Maximize2,
-  MessageCircle,
   ScanLine,
 } from 'lucide-react';
 
@@ -352,15 +352,10 @@ const whatsappLink =
               <strong>{price}</strong>
             </div>
 
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noreferrer"
-              className="whatsappButton"
-            >
-              <MessageCircle />
-              Kontakto në WhatsApp
-            </a>
+            <WhatsAppButton
+  propertyId={property.id}
+  whatsappLink={whatsappLink}
+/>
             <ViewingRequest
   propertyId={property.id}
   propertyTitle={property.title}
