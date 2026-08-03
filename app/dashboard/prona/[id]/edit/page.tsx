@@ -249,6 +249,8 @@ export default function EditPropertyPage() {
       longitude:
         Number(form.get('longitude')) || null,
 
+        featured: form.get('featured') === 'on',
+
       published,
     };
 
@@ -425,23 +427,36 @@ export default function EditPropertyPage() {
                 </select>
               </label>
 
-              <label>
-                Lloji
-                <select
-                  name="property_type"
-                  defaultValue={
-                    property.property_type
-                  }
-                >
-                  <option>Apartament</option>
-                  <option>Shtëpi</option>
-                  <option>Vilë</option>
-                  <option>Lokal</option>
-                  <option>Truall</option>
-                </select>
-              </label>
 
-              <label>
+<label>
+  Lloji
+  <select
+    name="property_type"
+    defaultValue={property.property_type}
+  >
+    <option>Apartament</option>
+    <option>Shtëpi</option>
+    <option>Vilë</option>
+    <option>Lokal</option>
+    <option>Truall</option>
+  </select>
+</label>
+
+<label className="featuredToggle wide">
+  <input
+    type="checkbox"
+    name="featured"
+    defaultChecked={property.featured}
+  />
+
+  <span>
+    <strong>Pronë e veçuar</strong>
+    <small>
+      Shfaqe këtë pronë me përparësi në ballinë dhe në rezultate.
+    </small>
+  </span>
+</label>
+<label>
                 Qyteti
                 <input
                   name="city"

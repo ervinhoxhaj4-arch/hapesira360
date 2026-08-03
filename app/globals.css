@@ -1014,3 +1014,40 @@
 .propertyViewCount svg {
   color: var(--gold);
 }
+/* FEATURED PROPERTY TOGGLE */
+
+.featuredToggle {
+  min-height: 76px;
+  padding: 16px 18px;
+  display: flex !important;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--soft);
+  cursor: pointer;
+}
+
+.featuredToggle input {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  accent-color: var(--gold);
+}
+
+.featuredToggle > span {
+  display: grid;
+  gap: 4px;
+}
+
+.featuredToggle strong {
+  color: var(--navy);
+  font-size: 15px;
+}
+
+.featuredToggle small {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}

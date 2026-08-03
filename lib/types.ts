@@ -6,6 +6,7 @@ export type PropertyImage = {
 };
 
 export type DbProperty = {
+  featured: boolean;
   id: string;
   title: string;
   status: 'sale' | 'rent';
