@@ -1273,3 +1273,41 @@
     background: #ffffff;
   }
 }
+/* LANGUAGE SWITCH */
+
+.languageSwitch {
+  min-width: 38px;
+  min-height: 34px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.5px;
+}
+
+.languageSwitch:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.mobileHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileLanguageSwitch {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  .mobileLanguageSwitch {
+    display: inline-flex;
+  }
+}
