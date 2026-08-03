@@ -247,11 +247,14 @@ export default function EditPropertyPage() {
         Number(form.get('latitude')) || null,
 
       longitude:
-        Number(form.get('longitude')) || null,
+  Number(form.get('longitude')) || null,
 
-        featured: form.get('featured') === 'on',
+whatsapp:
+  String(form.get('whatsapp') || '').trim() || null,
 
-      published,
+featured: form.get('featured') === 'on',
+
+published,
     };
 
     const { error: updateError } = await supabase
@@ -474,6 +477,17 @@ export default function EditPropertyPage() {
                   }
                 />
               </label>
+              <label className="wide">
+  Numri i WhatsApp
+  <small> (opsional)</small>
+
+  <input
+    name="whatsapp"
+    type="tel"
+    defaultValue={property.whatsapp || ''}
+    placeholder="38344111222"
+  />
+</label>
 
               <label>
                 Çmimi (€)
