@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Bath,
   BedDouble,
@@ -14,14 +17,26 @@ export default function PropertyCard({
 }: {
   property: UiProperty;
 }) {
+  const pathname = usePathname();
+
+  const isEnglish =
+    pathname === '/en' ||
+    pathname.startsWith('/en/');
+
+  const propertyLink = isEnglish
+    ? `/en/prona/${property.id}`
+    : `/prona/${property.id}`;
+
   const price =
     property.purpose === 'qira'
-      ? `€${property.price.toLocaleString('de-DE')} / muaj`
+      ? isEnglish
+        ? `€${property.price.toLocaleString('de-DE')} / month`
+        : `€${property.price.toLocaleString('de-DE')} / muaj`
       : `€${property.price.toLocaleString('de-DE')}`;
 
   return (
     <Link
-      href={`/prona/${property.id}`}
+      href={propertyLink}
       className="propertyCard"
     >
       <div className="cardImageWrap">
@@ -35,13 +50,17 @@ export default function PropertyCard({
 
         <span className="purposeBadge">
           {property.purpose === 'qira'
-            ? 'Me Qira'
-            : 'Në Shitje'}
+            ? isEnglish
+              ? 'For Rent'
+              : 'Me Qira'
+            : isEnglish
+              ? 'For Sale'
+              : 'Në Shitje'}
         </span>
 
         {property.featured && (
           <span className="featuredBadge">
-            ⭐ E VEÇUAR
+            ⭐ {isEnglish ? 'FEATURED' : 'E VEÇUAR'}
           </span>
         )}
 
@@ -56,6 +75,7 @@ export default function PropertyCard({
       <div className="cardBody">
         <p className="eyebrow">
           {property.city}
+
           {property.neighborhood
             ? ` · ${property.neighborhood}`
             : ''}
@@ -66,17 +86,35 @@ export default function PropertyCard({
         <p className="price">{price}</p>
 
         <div className="facts">
-          <span>
+          <span
+            title={
+              isEnglish
+                ? 'Bedrooms'
+                : 'Dhoma'
+            }
+          >
             <BedDouble size={17} />
             {property.bedrooms}
           </span>
 
-          <span>
+          <span
+            title={
+              isEnglish
+                ? 'Bathrooms'
+                : 'Banjo'
+            }
+          >
             <Bath size={17} />
             {property.bathrooms}
           </span>
 
-          <span>
+          <span
+            title={
+              isEnglish
+                ? 'Area'
+                : 'Sipërfaqja'
+            }
+          >
             <Maximize2 size={17} />
             {property.area} m²
           </span>
