@@ -134,11 +134,12 @@ export default function PropertyGallery({
       {activeImage &&
         activeIndex !== null && (
           <div
-            className="lightbox"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Galeria e fotografive"
-          >
+  className="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Galeria e fotografive"
+  onClick={() => setActiveIndex(null)}
+>
             <button
               type="button"
               className="lightboxClose"
@@ -161,7 +162,10 @@ export default function PropertyGallery({
               </button>
             )}
 
-            <div className="lightboxImageWrap">
+            <div
+  className="lightboxImageWrap"
+  onClick={(event) => event.stopPropagation()}
+>
               <Image
                 src={activeImage}
                 alt={`${title} – fotografia ${

@@ -1612,3 +1612,148 @@
     border-radius: 14px;
   }
 }
+/* =========================
+   PROPERTY LIGHTBOX
+========================= */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+
+  display: grid;
+  place-items: center;
+
+  padding: 32px 80px;
+
+  background: rgba(4, 10, 20, 0.94);
+  backdrop-filter: blur(10px);
+}
+
+.lightboxImageWrap {
+  position: relative;
+
+  width: min(1200px, 90vw);
+  height: min(800px, 82vh);
+
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.lightboxImage {
+  object-fit: contain;
+  object-position: center;
+}
+
+.lightboxClose {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 30003;
+
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.lightboxClose:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightboxArrow {
+  position: fixed;
+  top: 50%;
+  z-index: 30003;
+
+  width: 54px;
+  height: 54px;
+
+  display: grid;
+  place-items: center;
+
+  transform: translateY(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.lightboxArrow:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightboxArrowLeft {
+  left: 24px;
+}
+
+.lightboxArrowRight {
+  right: 24px;
+}
+
+.lightboxCounter {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 30003;
+
+  transform: translateX(-50%);
+
+  padding: 9px 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .lightbox {
+    padding: 70px 16px;
+  }
+
+  .lightboxImageWrap {
+    width: 100%;
+    height: 76vh;
+    border-radius: 12px;
+  }
+
+  .lightboxClose {
+    top: 16px;
+    right: 16px;
+  }
+
+  .lightboxArrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .lightboxArrowLeft {
+    left: 10px;
+  }
+
+  .lightboxArrowRight {
+    right: 10px;
+  }
+
+  .lightboxCounter {
+    bottom: 16px;
+  }
+}
