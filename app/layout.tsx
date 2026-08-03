@@ -1,3 +1,4 @@
+import LanguageSuggestion from '@/components/LanguageSuggestion';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import HtmlLanguage from '@/components/HtmlLanguage';
 
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body>
         <HtmlLanguage />
         <GoogleAnalytics />
+        <LanguageSuggestion />
         {children}
       </body>
     </html>
