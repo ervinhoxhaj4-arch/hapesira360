@@ -1,7 +1,12 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { CalendarDays, CheckCircle2 } from 'lucide-react';
+import {
+  CalendarDays,
+  CheckCircle2,
+} from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
 import { supabase } from '@/lib/supabase';
 
 type ViewingRequestProps = {
@@ -13,9 +18,56 @@ export default function ViewingRequest({
   propertyId,
   propertyTitle,
 }: ViewingRequestProps) {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const pathname = usePathname();
+
+  const isEnglish =
+    pathname === '/en' ||
+    pathname.startsWith('/en/');
+
+  const text = isEnglish
+    ? {
+        eyebrow: 'Request a viewing',
+        title: 'See the property in person',
+        fullName: 'Full name',
+        fullNamePlaceholder: 'Your name',
+        phone: 'Phone number',
+        email: 'Email',
+        message: 'Message',
+        messagePlaceholder:
+          'When would you like to view the property?',
+        success:
+          'Your viewing request was sent successfully.',
+        savedButEmailFailed:
+          'Your request was saved, but the email notification could not be sent.',
+        loading: 'Sending...',
+        submit: 'Request a viewing',
+      }
+    : {
+        eyebrow: 'Cakto një vizitë',
+        title: 'Shiko pronën nga afër',
+        fullName: 'Emri dhe mbiemri',
+        fullNamePlaceholder: 'Emri juaj',
+        phone: 'Numri i telefonit',
+        email: 'Email',
+        message: 'Mesazhi',
+        messagePlaceholder:
+          'Kur dëshironi ta vizitoni pronën?',
+        success:
+          'Kërkesa u dërgua me sukses.',
+        savedButEmailFailed:
+          'Kërkesa u ruajt, por njoftimi me email nuk u dërgua.',
+        loading: 'Duke dërguar...',
+        submit: 'Kërko një vizitë',
+      };
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [success, setSuccess] =
+    useState(false);
+
+  const [error, setError] =
+    useState('');
 
   async function submitRequest(
     event: FormEvent<HTMLFormElement>
@@ -32,17 +84,30 @@ export default function ViewingRequest({
     const payload = {
       property_id: propertyId,
       property_title: propertyTitle,
-      full_name: String(form.get('full_name') || '').trim(),
-      phone: String(form.get('phone') || '').trim(),
+
+      full_name: String(
+        form.get('full_name') || ''
+      ).trim(),
+
+      phone: String(
+        form.get('phone') || ''
+      ).trim(),
+
       email:
-        String(form.get('email') || '').trim() || null,
+        String(
+          form.get('email') || ''
+        ).trim() || null,
+
       message:
-        String(form.get('message') || '').trim() || null,
+        String(
+          form.get('message') || ''
+        ).trim() || null,
     };
 
-    const { error: insertError } = await supabase
-      .from('property_inquiries')
-      .insert(payload);
+    const { error: insertError } =
+      await supabase
+        .from('property_inquiries')
+        .insert(payload);
 
     if (insertError) {
       setError(insertError.message);
@@ -50,20 +115,26 @@ export default function ViewingRequest({
       return;
     }
 
-    const emailResponse = await fetch('/api/viewing-request', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        propertyId,
-        propertyTitle,
-        fullName: payload.full_name,
-        phone: payload.phone,
-        email: payload.email,
-        message: payload.message,
-      }),
-    });
+    const emailResponse = await fetch(
+      '/api/viewing-request',
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'application/json',
+        },
+
+        body: JSON.stringify({
+          propertyId,
+          propertyTitle,
+          fullName: payload.full_name,
+          phone: payload.phone,
+          email: payload.email,
+          message: payload.message,
+        }),
+      }
+    );
 
     if (!emailResponse.ok) {
       const result = await emailResponse
@@ -72,8 +143,9 @@ export default function ViewingRequest({
 
       setError(
         result?.error ||
-          'Kërkesa u ruajt, por njoftimi me email nuk u dërgua.'
+          text.savedButEmailFailed
       );
+
       setLoading(false);
       return;
     }
@@ -89,23 +161,30 @@ export default function ViewingRequest({
         <CalendarDays />
 
         <div>
-          <p className="eyebrow">Cakto një vizitë</p>
-          <h3>Shiko pronën nga afër</h3>
+          <p className="eyebrow">
+            {text.eyebrow}
+          </p>
+
+          <h3>{text.title}</h3>
         </div>
       </div>
 
       <form onSubmit={submitRequest}>
         <label>
-          Emri dhe mbiemri
+          {text.fullName}
+
           <input
             name="full_name"
             required
-            placeholder="Emri juaj"
+            placeholder={
+              text.fullNamePlaceholder
+            }
           />
         </label>
 
         <label>
-          Numri i telefonit
+          {text.phone}
+
           <input
             name="phone"
             type="tel"
@@ -115,7 +194,8 @@ export default function ViewingRequest({
         </label>
 
         <label>
-          Email
+          {text.email}
+
           <input
             name="email"
             type="email"
@@ -124,18 +204,21 @@ export default function ViewingRequest({
         </label>
 
         <label>
-          Mesazhi
+          {text.message}
+
           <textarea
             name="message"
             rows={4}
-            placeholder="Kur dëshironi ta vizitoni pronën?"
+            placeholder={
+              text.messagePlaceholder
+            }
           />
         </label>
 
         {success && (
           <div className="inquirySuccess">
             <CheckCircle2 size={19} />
-            Kërkesa u dërgua me sukses.
+            {text.success}
           </div>
         )}
 
@@ -145,12 +228,15 @@ export default function ViewingRequest({
           </div>
         )}
 
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+        >
           <CalendarDays size={18} />
 
           {loading
-            ? 'Duke dërguar...'
-            : 'Kërko një vizitë'}
+            ? text.loading
+            : text.submit}
         </button>
       </form>
     </section>
