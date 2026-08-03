@@ -1,6 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { BedDouble, Bath, Maximize2, ScanLine } from 'lucide-react';
+import {
+  Bath,
+  BedDouble,
+  Maximize2,
+  ScanLine,
+} from 'lucide-react';
+
 import type { UiProperty } from '@/lib/types';
 
 export default function PropertyCard({
@@ -14,7 +20,10 @@ export default function PropertyCard({
       : `€${property.price.toLocaleString('de-DE')}`;
 
   return (
-    <Link href={`/prona/${property.id}`} className="propertyCard">
+    <Link
+      href={`/prona/${property.id}`}
+      className="propertyCard"
+    >
       <div className="cardImageWrap">
         <Image
           src={property.coverImage}
@@ -25,12 +34,21 @@ export default function PropertyCard({
         />
 
         <span className="purposeBadge">
-          {property.purpose === 'qira' ? 'Me Qira' : 'Në Shitje'}
+          {property.purpose === 'qira'
+            ? 'Me Qira'
+            : 'Në Shitje'}
         </span>
+
+        {property.featured && (
+          <span className="featuredBadge">
+            ⭐ E VEÇUAR
+          </span>
+        )}
 
         {property.tour360Url && (
           <span className="tourBadge">
-            <ScanLine size={15} /> 360°
+            <ScanLine size={15} />
+            360°
           </span>
         )}
       </div>
@@ -38,10 +56,13 @@ export default function PropertyCard({
       <div className="cardBody">
         <p className="eyebrow">
           {property.city}
-          {property.neighborhood ? ` · ${property.neighborhood}` : ''}
+          {property.neighborhood
+            ? ` · ${property.neighborhood}`
+            : ''}
         </p>
 
         <h3>{property.title}</h3>
+
         <p className="price">{price}</p>
 
         <div className="facts">
