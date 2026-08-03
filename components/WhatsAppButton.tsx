@@ -1,6 +1,8 @@
 'use client';
 
 import { MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
 import { supabase } from '@/lib/supabase';
 
 type WhatsAppButtonProps = {
@@ -10,14 +12,20 @@ type WhatsAppButtonProps = {
 
 function getVisitorId() {
   const storageKey = 'h360-visitor-id';
-  const existingVisitorId = localStorage.getItem(storageKey);
+
+  const existingVisitorId =
+    localStorage.getItem(storageKey);
 
   if (existingVisitorId) {
     return existingVisitorId;
   }
 
   const visitorId = crypto.randomUUID();
-  localStorage.setItem(storageKey, visitorId);
+
+  localStorage.setItem(
+    storageKey,
+    visitorId
+  );
 
   return visitorId;
 }
@@ -26,6 +34,12 @@ export default function WhatsAppButton({
   propertyId,
   whatsappLink,
 }: WhatsAppButtonProps) {
+  const pathname = usePathname();
+
+  const isEnglish =
+    pathname === '/en' ||
+    pathname.startsWith('/en/');
+
   async function recordClick() {
     try {
       const visitorId = getVisitorId();
@@ -62,7 +76,10 @@ export default function WhatsAppButton({
       }}
     >
       <MessageCircle />
-      Kontakto në WhatsApp
+
+      {isEnglish
+        ? 'Contact on WhatsApp'
+        : 'Kontakto në WhatsApp'}
     </a>
   );
 }
