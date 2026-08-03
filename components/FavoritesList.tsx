@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 import PropertyCard from '@/components/PropertyCard';
 import type { UiProperty } from '@/lib/types';
@@ -13,6 +14,12 @@ type FavoritesListProps = {
 export default function FavoritesList({
   properties,
 }: FavoritesListProps) {
+  const pathname = usePathname();
+
+  const isEnglish =
+    pathname === '/en' ||
+    pathname.startsWith('/en/');
+
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -22,7 +29,11 @@ export default function FavoritesList({
         localStorage.getItem('favorites') || '[]'
       );
 
-      setFavoriteIds(Array.isArray(saved) ? saved : []);
+      setFavoriteIds(
+        Array.isArray(saved)
+          ? saved
+          : []
+      );
     } catch {
       setFavoriteIds([]);
     } finally {
@@ -30,14 +41,17 @@ export default function FavoritesList({
     }
   }, []);
 
-  const favoriteProperties = properties.filter((property) =>
-    favoriteIds.includes(property.id)
+  const favoriteProperties = properties.filter(
+    (property) =>
+      favoriteIds.includes(property.id)
   );
 
   if (!ready) {
     return (
       <div className="favoritesLoading">
-        Duke ngarkuar pronat e ruajtura...
+        {isEnglish
+          ? 'Loading saved properties...'
+          : 'Duke ngarkuar pronat e ruajtura...'}
       </div>
     );
   }
@@ -47,14 +61,29 @@ export default function FavoritesList({
       <div className="favoritesEmpty">
         <Heart size={38} />
 
-        <h2>Nuk ke ruajtur ende prona</h2>
+        <h2>
+          {isEnglish
+            ? 'You have not saved any properties yet'
+            : 'Nuk ke ruajtur ende prona'}
+        </h2>
 
         <p>
-          Kliko ikonën e zemrës në një pronë për ta ruajtur këtu.
+          {isEnglish
+            ? 'Click the heart icon on a property to save it here.'
+            : 'Kliko ikonën e zemrës në një pronë për ta ruajtur këtu.'}
         </p>
 
-        <a href="/kerko" className="darkButton">
-          Eksploro pronat
+        <a
+          href={
+            isEnglish
+              ? '/en/kerko'
+              : '/kerko'
+          }
+          className="darkButton"
+        >
+          {isEnglish
+            ? 'Explore properties'
+            : 'Eksploro pronat'}
         </a>
       </div>
     );
@@ -62,12 +91,14 @@ export default function FavoritesList({
 
   return (
     <div className="propertyGrid">
-      {favoriteProperties.map((property) => (
-        <PropertyCard
-          key={property.id}
-          property={property}
-        />
-      ))}
+      {favoriteProperties.map(
+        (property) => (
+          <PropertyCard
+            key={property.id}
+            property={property}
+          />
+        )
+      )}
     </div>
   );
 }
