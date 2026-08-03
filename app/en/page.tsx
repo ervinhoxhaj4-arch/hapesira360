@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import PropertyCard from '@/components/PropertyCard';
 import SearchBox from '@/components/SearchBox';
@@ -13,7 +14,27 @@ import {
 import Link from 'next/link';
 
 export const revalidate = 0;
-
+export const metadata: Metadata = {
+  title: 'Properties in Kosovo | Hapësira360',
+  description:
+    'Discover properties for sale and rent in Kosovo with professional photography, map locations and virtual 360° tours.',
+  alternates: {
+    canonical: 'https://hapesira360.com/en',
+    languages: {
+      sq: 'https://hapesira360.com',
+      en: 'https://hapesira360.com/en',
+    },
+  },
+  openGraph: {
+    title: 'Properties in Kosovo | Hapësira360',
+    description:
+      'Discover properties for sale and rent in Kosovo with professional photography, map locations and virtual 360° tours.',
+    url: 'https://hapesira360.com/en',
+    siteName: 'Hapësira360',
+    locale: 'en_US',
+    type: 'website',
+  },
+};
 export default async function EnglishHomePage() {
   const properties = await getPublishedProperties(true);
   const t = getTranslations('en');
