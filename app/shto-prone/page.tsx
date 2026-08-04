@@ -74,6 +74,41 @@ export default function AddPropertyPage() {
 
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
+    const googleMapsUrl = String(
+  form.get('google_maps_url') || ''
+).trim();
+
+let resolvedLatitude: number | null = null;
+let resolvedLongitude: number | null = null;
+
+if (googleMapsUrl) {
+  const mapsResponse = await fetch(
+    '/api/resolve-google-maps',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        googleMapsUrl,
+      }),
+    }
+  );
+
+  const mapsResult = await mapsResponse.json();
+
+  if (!mapsResponse.ok) {
+    setError(
+      mapsResult.error ||
+        'Google Maps link could not be processed.'
+    );
+    setLoading(false);
+    return;
+  }
+
+  resolvedLatitude = mapsResult.latitude;
+  resolvedLongitude = mapsResult.longitude;
+}
 
     const payload = {
       title: String(form.get('title') || '').trim(),
@@ -120,20 +155,13 @@ export default function AddPropertyPage() {
         null,
 
       google_maps_url:
-        String(
-          form.get('google_maps_url') || ''
-        ).trim() || null,
+  googleMapsUrl || null,
 
-      latitude:
-        Number(form.get('latitude')) || null,
+latitude:
+  resolvedLatitude,
 
-      longitude:
-        Number(form.get('longitude')) || null,
-
-      featured:
-        form.get('featured') === 'on',
-
-      published,
+longitude:
+  resolvedLongitude,
     };
 
     const {
@@ -465,26 +493,18 @@ export default function AddPropertyPage() {
                   placeholder="https://maps.google.com/..."
                 />
               </label>
+              <label className="wide">
+  Linku i Google Maps
+  <small> (opsional)</small>
 
-              <label>
-                Latitude
+  <input
+    name="google_maps_url"
+    type="url"
+    placeholder="https://maps.app.goo.gl/..."
+  />
+</label>
 
-                <input
-                  name="latitude"
-                  inputMode="decimal"
-                  placeholder="42.2139"
-                />
-              </label>
-
-              <label>
-                Longitude
-
-                <input
-                  name="longitude"
-                  inputMode="decimal"
-                  placeholder="20.7397"
-                />
-              </label>
+            
             </div>
           </section>
 
