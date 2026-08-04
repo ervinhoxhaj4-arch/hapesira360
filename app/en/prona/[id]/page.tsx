@@ -158,9 +158,12 @@ export default async function EnglishPropertyPage({
       : '');
 
   const mapEmbedUrl =
-    property.latitude &&
-    property.longitude
-      ? `https://www.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`
+  property.latitude && property.longitude
+    ? `https://www.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`
+    : property.googleMapsUrl
+      ? `https://www.google.com/maps?q=${encodeURIComponent(
+          property.googleMapsUrl
+        )}&output=embed`
       : '';
 
   const images =
