@@ -1,23 +1,30 @@
 import { NextResponse } from 'next/server';
 
-function extractCoordinates(url: string) {
+function extractCoordinates(value: string) {
+  const decoded = decodeURIComponent(value);
+
   const patterns = [
-    /@(-?\d+\.\d+),(-?\d+\.\d+)/,
-    /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,
-    /[?&]query=(-?\d+\.\d+)%2C(-?\d+\.\d+)/i,
-    /[?&]query=(-?\d+\.\d+),(-?\d+\.\d+)/i,
-    /[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/i,
-    /[?&]center=(-?\d+\.\d+),(-?\d+\.\d+)/i,
+    /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/,
+    /!3d(-?\d+(?:\.\d+)?).*?!4d(-?\d+(?:\.\d+)?)/,
+    /[?&](?:q|query|ll|center)=(-?\d+(?:\.\d+)?)[,%20]+(-?\d+(?:\.\d+)?)/i,
   ];
 
   for (const pattern of patterns) {
-    const match = url.match(pattern);
+    const match = decoded.match(pattern);
 
     if (match) {
-      return {
-        latitude: Number(match[1]),
-        longitude: Number(match[2]),
-      };
+      const latitude = Number(match[1]);
+      const longitude = Number(match[2]);
+
+      if (
+        Number.isFinite(latitude) &&
+        Number.isFinite(longitude)
+      ) {
+        return {
+          latitude,
+          longitude,
+        };
+      }
     }
   }
 
@@ -41,23 +48,15 @@ export async function POST(request: Request) {
 
     const parsedUrl = new URL(googleMapsUrl);
 
-    const allowedHosts = [
-      'google.com',
-      'www.google.com',
-      'maps.google.com',
-      'maps.app.goo.gl',
-      'goo.gl',
-    ];
+    const allowed =
+      parsedUrl.hostname === 'maps.app.goo.gl' ||
+      parsedUrl.hostname === 'goo.gl' ||
+      parsedUrl.hostname === 'google.com' ||
+      parsedUrl.hostname.endsWith('.google.com');
 
-    const isAllowed = allowedHosts.some(
-      (host) =>
-        parsedUrl.hostname === host ||
-        parsedUrl.hostname.endsWith(`.${host}`)
-    );
-
-    if (!isAllowed) {
+    if (!allowed) {
       return NextResponse.json(
-        { error: 'Invalid Google Maps URL.' },
+        { error: 'This is not a valid Google Maps link.' },
         { status: 400 }
       );
     }
@@ -66,41 +65,31 @@ export async function POST(request: Request) {
       extractCoordinates(googleMapsUrl);
 
     if (directCoordinates) {
-      return NextResponse.json({
-        ...directCoordinates,
-        resolvedUrl: googleMapsUrl,
-      });
+      return NextResponse.json(directCoordinates);
     }
 
     const response = await fetch(googleMapsUrl, {
-      method: 'GET',
       redirect: 'follow',
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 Hapësira360 Maps Resolver',
-      },
       cache: 'no-store',
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+      },
     });
 
-    const resolvedUrl = response.url;
-
     const resolvedCoordinates =
-      extractCoordinates(resolvedUrl);
+      extractCoordinates(response.url);
 
     if (!resolvedCoordinates) {
       return NextResponse.json(
         {
           error:
-            'Could not detect coordinates from this Google Maps link. Copy the link directly from the selected location in Google Maps.',
+            'The exact location could not be detected from this link. Copy the link again after selecting the exact pin in Google Maps.',
         },
         { status: 422 }
       );
     }
 
-    return NextResponse.json({
-      ...resolvedCoordinates,
-      resolvedUrl,
-    });
+    return NextResponse.json(resolvedCoordinates);
   } catch {
     return NextResponse.json(
       {
